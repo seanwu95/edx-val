@@ -291,7 +291,9 @@ def get_video_transcript_data(video_id, language_code):
     video_transcript = VideoTranscript.get_or_none(video_id, language_code)
     if video_transcript:
         try:
-            return dict(file_name=video_transcript.filename, content=video_transcript.transcript.file.read())
+            result = dict(file_name=video_transcript.filename, content=video_transcript.transcript.file.read())
+            video_transcript.transcript.file.close()
+            return result
         except Exception:
             logger.exception(
                 '[edx-val] Error while retrieving transcript for video=%s -- language_code=%s',
